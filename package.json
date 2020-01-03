@@ -1,0 +1,19 @@
+{
+  "name": "futilities",
+  "version": "1.0.0",
+  "description": "A place to throw some standalone code that may be interesting to read through, yet worthless enough to dump into a public repo.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/soflo-hacker-hours/futilities.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/soflo-hacker-hours/futilities/issues"
+  },
+  "homepage": "https://github.com/soflo-hacker-hours/futilities#readme"
+}
