@@ -1,5 +1,13 @@
+/*
+Copyright 2019 Daniel Vaughn
 
-import _ from 'lodash'
+Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+Contributors
+2020 Bryan Bonvallet
+*/
 
 const eventService = {
 
@@ -24,7 +32,7 @@ const eventService = {
 
   // Retrieve a topic by its ID.
   getTopic(topicId) {
-    return _.find(this.topics, {id: topicId}) || null
+    return this.topics.find(e => e.id === topicId) || null
   },
 
   // Subscribe to a function, similar to jQuery's ".on()" method.
@@ -32,21 +40,20 @@ const eventService = {
     refId = refId || this.hashString()
     let topic = this.getTopic(topicId)
 
+    let to_queue = {
+      refId: refId || null,
+      callback: callback
+    };
+
     if (!topic) {
       topic = {
         id: topicId,
-        queue: [{
-          refId: refId || null,
-          callback: callback
-        }]
+        queue: [to_queue]
       }
 
       this.topics.push(topic)
     } else {
-      topic.queue.push({
-        refId: refId || null,
-        callback: callback
-      })
+      topic.queue.push(to_queue);
     }
 
     return refId
@@ -64,9 +71,7 @@ const eventService = {
       return
     }
 
-    topic.queue = _.filter(topic.queue, (entry) => {
-      return entry.refId !== refId
-    })
+    topic.queue = topic.queue.filter(entry => entry.refId !== refId);
   },
 
   /**
@@ -79,15 +84,15 @@ const eventService = {
     let args = Array.prototype.slice.call(arguments)
     let topicId = args.shift()
 
-    let topic = _.find(this.topics, {id: topicId})
+    let topic = this.getTopic(topicId);
 
     if (!topic || !topic.queue || !topic.queue.length) {
       return
     }
 
-    _.map(topic.queue, (entry) => {
+    topic.queue.forEach(entry => {
       if (entry.callback && (typeof entry.callback === 'function')) {
-        entry.callback.apply(null, args)
+        entry.callback.apply(null, args);
       }
     })
   }
