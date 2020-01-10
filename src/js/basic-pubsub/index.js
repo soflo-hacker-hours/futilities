@@ -40,21 +40,20 @@ const eventService = {
     refId = refId || this.hashString()
     let topic = this.getTopic(topicId)
 
+    let to_queue = {
+      refId: refId || null,
+      callback: callback
+    };
+
     if (!topic) {
       topic = {
         id: topicId,
-        queue: [{
-          refId: refId || null,
-          callback: callback
-        }]
+        queue: [to_queue]
       }
 
       this.topics.push(topic)
     } else {
-      topic.queue.push({
-        refId: refId || null,
-        callback: callback
-      })
+      topic.queue.push(to_queue);
     }
 
     return refId
